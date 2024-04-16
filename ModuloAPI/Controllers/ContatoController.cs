@@ -8,7 +8,7 @@ namespace ModuloAPI.Controllers
     [Route("[controller]")]
     public class ContatoController : ControllerBase
     {
-        
+
         private readonly AgendaContext _context;
 
         public ContatoController(AgendaContext context)
@@ -28,7 +28,7 @@ namespace ModuloAPI.Controllers
         public IActionResult ObterPorId(int id)
         {
             var contato = _context.Contatos.Find(id);
-            
+
             if (contato == null)
             {
                 return NotFound();
@@ -36,5 +36,24 @@ namespace ModuloAPI.Controllers
             return Ok(contato);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult Atualizar(int id, Contato contato)
+        {
+            var contatoBanco = _context.Contatos.Find(id);
+
+            if (contatoBanco == null)
+            {
+                return NotFound();
+            }
+
+            contatoBanco.Name = contato.Name;
+            contatoBanco.Telefone = contato.Telefone;
+            contatoBanco.Ativo = contato.Ativo;
+
+            _context.Contatos.Update(contatoBanco);
+            _context.SaveChanges();
+
+            return Ok(contatoBanco);
+        }
     }
 }
